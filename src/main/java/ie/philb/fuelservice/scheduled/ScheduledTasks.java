@@ -14,6 +14,7 @@ import ie.philb.fuelservice.domain.Tank;
 import ie.philb.fuelservice.domain.exception.FuelConfigurationException;
 import ie.philb.fuelservice.domain.exception.NoSuchItemException;
 import ie.philb.fuelservice.domain.exception.PumpStateException;
+import ie.philb.fuelservice.service.FuelingConfigurationService;
 import ie.philb.fuelservice.util.RandomUtil;
 import ie.philb.fuelservice.websocket.WsEndPoint;
 import java.util.List;
@@ -36,6 +37,9 @@ public class ScheduledTasks {
     private FuelingConfiguration fuelingConfiguration;
 
     @Autowired
+    private FuelingConfigurationService fuelingConfigurationService;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
@@ -52,6 +56,8 @@ public class ScheduledTasks {
 
     @Scheduled(fixedRate = 5 * 1000)
     public void updateTankStatus() {
+
+        fuelingConfigurationService.updateConfiguration(fuelingConfiguration);
 
         for (Tank tank : fuelingConfiguration.getTanks()) {
             int tempChange = RandomUtil.randomBoolean() ? 1 : -1;
@@ -93,8 +99,6 @@ public class ScheduledTasks {
 
             if (pump.getPumpState() == PumpState.FILLING) {
                 try {
-                    Filling filling = fuelingConfiguration.getInProgressFilling(pump);
-
                     fillingProgressManager.updatePump(pump);
                 } catch (PumpStateException | NoSuchItemException | FuelConfigurationException | JsonProcessingException ex) {
                     logger.error("Failed to udpate filling pump {}", pump, ex);
@@ -105,7 +109,6 @@ public class ScheduledTasks {
             if (pump.getPumpState() == PumpState.STOPPED) {
                 if (RandomUtil.succeedWithProbability(0.1)) {
                     pump.setPumpState(PumpState.IDLE);
-                    continue;
                 }
             }
         }

@@ -5,14 +5,19 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 -->
 <html>
     <head>
-        <title>Fuel Sim Home</title>
+        <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <div>Fuel Simulator</div>
-        <br/>
-        <a href="/swagger-ui.html">Swagger UI</a> <br/>
-        <a href="/h2-console">H2 Console</a> <br/>
+        <div>Thymeleaf Example, Grades</div>
+        <table>
+            <tbody>
+                <tr th:each="grade: ${fuelingConfiguration.grades}">
+                    <td th:text="${grade.id}" />
+                    <td th:text="${grade.name}" />
+                </tr>
+            </tbody>
+        </table>
     </body>
 </html>

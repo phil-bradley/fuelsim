@@ -25,10 +25,15 @@ public class WebController {
         return "home";
     }
 
-    @GetMapping("/hello")
-    public String hello(Model model) {
+    @GetMapping("/grades")
+    public String grades(Model model) {
         model.addAttribute("fuelingConfiguration", fuelingConfiguration);
-        return "hello";
+        return "grades";
     }
-;
+
+    @GetMapping("/websocket")
+    public String websocket(Model model) {
+        model.addAttribute("fuelingConfiguration", fuelingConfiguration);
+        return "websocket";
+    }
 }

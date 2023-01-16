@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html>
+    <head>
+        <title>Web Socket Demo</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css" />
+        <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js"></script>
+        <script>
+            const mySocket = new WebSocket("ws://localhost:8855/ws/status");
+
+            mySocket.onopen = (event) => {
+                console.log("Socket opened");
+            };
+
+            mySocket.onmessage = (event) => {
+                var data = JSON.parse(event.data);
+                var pumps = data.pumps;
+
+                console.log(pumps);
+
+                $('#grid').grid('destroy', true, true);
+
+                grid = $('#grid').grid({
+                    primaryKey: 'id',
+                    dataSource: pumps,
+                    columns: [
+                        {field: 'id', width: 56},
+                        {field: 'pumpState', sortable: true}
+                    ]
+                });
+
+            };
+        </script>
+    </head>
+    <body>
+        <div>Websockets Example</div>
+        <table id="grid"></table>
+    </body>
+</html>
